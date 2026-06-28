@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Spotify - DemixSound Premium</title>
+    <title>Spotify - DemixSound</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -52,27 +52,17 @@
         .header-title {
             font-size: 22px;
             font-weight: 700;
+            letter-spacing: -0.03em;
         }
-
-        /* --- ЧІПСИ --- */
-        .filter-ribbon {
+        .header-actions {
             display: flex;
-            gap: 8px;
-            padding: 4px 0 16px 0;
+            gap: 16px;
+            align-items: center;
         }
-        .filter-chip {
-            background-color: var(--spotify-light-grey);
-            color: var(--spotify-text-white);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+        .action-btn-click {
+            font-size: 22px;
             cursor: pointer;
-        }
-        .filter-chip.chip-active {
-            background-color: var(--spotify-green);
-            color: var(--spotify-black);
+            padding: 4px;
         }
 
         /* --- СПИСОК ТРЕКІВ --- */
@@ -80,15 +70,20 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin-top: 8px;
         }
         .media-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px;
+            padding: 10px;
             background-color: var(--spotify-grey);
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .media-row:active {
+            background-color: var(--spotify-light-grey);
         }
         .media-main-info {
             display: flex;
@@ -99,7 +94,7 @@
         .media-art {
             width: 56px;
             height: 56px;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-right: 14px;
             object-fit: cover;
             background-color: var(--spotify-light-grey);
@@ -117,6 +112,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-bottom: 3px;
         }
         .media-title-text.playing-active {
             color: var(--spotify-green) !important;
@@ -124,9 +120,21 @@
         .media-desc-text {
             font-size: 13px;
             color: var(--spotify-text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .delete-btn {
+            color: var(--spotify-text-muted);
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .delete-btn:active {
+            color: var(--spotify-error);
         }
 
-        /* --- ФОРМИ ДОДАВАННЯ --- */
+        /* --- ПАНЕЛІ КОНТЕНТУ --- */
         .spotify-panel {
             background-color: var(--spotify-grey);
             border: 1px solid var(--spotify-light-grey);
@@ -134,6 +142,14 @@
             padding: 20px;
             margin-bottom: 20px;
             box-sizing: border-box;
+        }
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .form-group {
             margin-bottom: 16px;
@@ -152,85 +168,101 @@
             padding: 12px;
             background-color: var(--spotify-light-grey);
             border: 1px solid transparent;
-            border-radius: 4px;
+            border-radius: 6px;
             color: white;
+            font-family: inherit;
+            font-size: 14px;
             box-sizing: border-box;
+        }
+        .spotify-input:focus {
+            outline: none;
+            border-color: var(--spotify-green);
         }
         .file-input-wrapper {
             background-color: var(--spotify-light-grey);
-            border: 1px dashed var(--spotify-green);
-            padding: 20px;
-            border-radius: 4px;
+            border: 2px dashed var(--spotify-green);
+            padding: 24px;
+            border-radius: 6px;
             text-align: center;
             color: var(--spotify-green);
             font-weight: 600;
+            font-size: 14px;
             position: relative;
+            cursor: pointer;
         }
         .file-input-wrapper input {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
         }
         .spotify-btn {
-            background-color: var(--spotify-text-white);
+            background-color: var(--spotify-green);
             color: var(--spotify-black);
             border: none;
             padding: 14px;
             border-radius: 50px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             width: 100%;
             cursor: pointer;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .spotify-btn:active {
+            transform: scale(0.98);
         }
 
         /* --- МІНІ-ПЛЕЄР --- */
         .bottom-playback-bar {
             position: fixed;
-            bottom: 72px; left: 8px; right: 8px;
-            height: 60px;
+            bottom: 76px; left: 8px; right: 8px;
+            height: 62px;
             background-color: #202020;
             border-radius: 8px;
             padding: 8px 12px;
             display: flex; align-items: center; justify-content: space-between;
             box-sizing: border-box;
             z-index: 95;
-            display: none; /* Показується коли грає */
+            display: none;
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
         .mini-track-clickable { display: flex; align-items: center; flex-grow: 1; min-width: 0; }
-        .mini-track-art { width: 44px; height: 44px; border-radius: 4px; margin-right: 12px; object-fit: cover; }
+        .mini-track-art { width: 44px; height: 44px; border-radius: 4px; margin-right: 12px; object-fit: cover; background-color: #333; }
         .mini-track-details { display: flex; flex-direction: column; text-align: left; min-width: 0; }
         .mini-track-title { font-size: 13px; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mini-track-artist { font-size: 11px; color: var(--spotify-text-muted); }
+        .mini-track-artist { font-size: 11px; color: var(--spotify-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mini-play-control-btn { background: none; border: none; color: white; font-size: 24px; padding: 6px 12px; cursor: pointer; }
+
         .progress-indicator-bar { position: absolute; bottom: 0; left: 8px; right: 8px; height: 2px; background-color: rgba(255,255,255,0.1); }
         .progress-indicator-fill { height: 100%; width: 0%; background-color: white; }
 
         /* --- ПОВНОЕКРАННИЙ ПЛЕЄР --- */
         .fullscreen-player-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, #333 0%, #000 100%);
+            background: linear-gradient(180deg, #252525 0%, #000000 100%);
             z-index: 200; display: none; flex-direction: column; padding: 24px; box-sizing: border-box;
             padding-top: calc(24px + env(safe-area-inset-top));
         }
         .fullscreen-player-overlay.overlay-open { display: flex; }
-        .fs-player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .fs-big-cover-art { width: 100%; max-width: 300px; aspect-ratio: 1/1; margin: 0 auto 40px auto; border-radius: 8px; background-size: cover; background-position: center; background-color: #222; }
+        .fs-player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .fs-big-cover-art { width: 100%; max-width: 300px; aspect-ratio: 1/1; margin: 0 auto 30px auto; border-radius: 8px; background-size: cover; background-position: center; background-color: #222; box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
         .fs-track-meta { text-align: left; margin-bottom: 24px; }
-        .fs-track-title { font-size: 22px; font-weight: 700; }
-        .fs-track-artist { font-size: 16px; color: var(--spotify-text-muted); }
-        .fs-slider-input { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.2); height: 4px; border-radius: 2px; }
-        .fs-slider-input::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: white; }
+        .fs-track-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fs-track-artist { font-size: 16px; color: var(--spotify-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fs-slider-input { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.2); height: 4px; border-radius: 2px; outline: none; margin: 0; }
+        .fs-slider-input::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; }
         .fs-time-stamps { display: flex; justify-content: space-between; font-size: 12px; color: var(--spotify-text-muted); margin-top: 8px; }
-        .fs-controls-panel { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-        .fs-center-play-btn { width: 64px; height: 64px; border-radius: 50%; background-color: white; color: black; display: flex; align-items: center; justify-content: center; font-size: 24px; border: none; }
+        .fs-controls-panel { display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 24px; }
+        .fs-nav-arrow { background: none; border: none; color: white; font-size: 28px; cursor: pointer; }
+        .fs-center-play-btn { width: 68px; height: 68px; border-radius: 50%; background-color: white; color: black; display: flex; align-items: center; justify-content: center; font-size: 26px; border: none; cursor: pointer; }
 
-        /* --- МЕНЮ НАВІГАЦІЇ --- */
+        /* --- НИЖНЯ НАВІГАЦІЯ --- */
         .bottom-nav-navigation {
             position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
             background-color: rgba(0, 0, 0, 0.95); display: flex; justify-content: space-around; align-items: center;
             border-top: 1px solid rgba(255,255,255,0.05); z-index: 100; padding-bottom: env(safe-area-inset-bottom);
         }
-        .nav-tab-item { display: flex; flex-direction: column; align-items: center; color: var(--spotify-text-muted); font-size: 11px; gap: 4px; cursor: pointer; }
+        .nav-tab-item { display: flex; flex-direction: column; align-items: center; color: var(--spotify-text-muted); font-size: 11px; gap: 4px; cursor: pointer; width: 50%; }
         .nav-tab-item.tab-selected { color: white; }
+        .nav-icon { font-size: 20px; }
     </style>
 </head>
 <body>
@@ -239,12 +271,11 @@
 
     <div id="screen-library" class="app-screen active-screen">
         <div class="main-header">
-            <div class="header-title">Музична Бібліотека</div>
-            <div style="font-size: 22px; cursor: pointer;" onclick="switchScreen('screen-add')">＋</div>
-        </div>
-
-        <div class="filter-ribbon">
-            <button class="filter-chip chip-active">Усі треки</button>
+            <div class="header-title">Твоя Медіатека</div>
+            <div class="header-actions">
+                <span class="action-btn-click" onclick="switchScreen('screen-settings')">⚙️</span>
+                <span class="action-btn-click" onclick="switchScreen('screen-add')">＋</span>
+            </div>
         </div>
 
         <div class="library-list" id="tracks-container">
@@ -252,48 +283,65 @@
     </div>
 
     <div id="screen-add" class="app-screen">
-        <div class="main-header"><div class="header-title">Завантажити трек</div></div>
+        <div class="main-header">
+            <div class="header-title">Завантажити файл</div>
+        </div>
         <div class="spotify-panel">
             <div class="form-group">
-                <label>Аудіофайл (.mp3 / .m4a)</label>
+                <label>Оберіть аудіофайл</label>
                 <div class="file-input-wrapper">
-                    <span id="file-status">Оберіть аудіозапис</span>
-                    <input type="file" id="form-file" accept="audio/*" onchange="handleFileCheck(this)">
+                    <span id="file-status">Натисніть для вибору .MP3 / .M4A</span>
+                    <input type="file" id="form-file" accept="audio/*" onchange="updateFileLabel(this)">
                 </div>
             </div>
             <div class="form-group">
                 <label>Назва пісні</label>
-                <input type="text" id="form-title" class="spotify-input" placeholder="Введіть назву">
+                <input type="text" id="form-title" class="spotify-input" placeholder="Наприклад: Твій улюблений трек">
             </div>
             <div class="form-group">
                 <label>Виконавець</label>
                 <input type="text" id="form-artist" class="spotify-input" placeholder="Ім'я артиста">
             </div>
             <div class="form-group">
-                <label>URL Обкладинки (зображення)</label>
-                <input type="url" id="form-cover" class="spotify-input" placeholder="Посилання на фото (необов'язково)">
+                <label>Посилання на картинку-обкладинку (URL)</label>
+                <input type="url" id="form-cover" class="spotify-input" placeholder="Залиш порожнім для стандартної">
             </div>
-            <button class="spotify-btn" onclick="saveTrackToDB()">Зберегти та включити</button>
+            <button class="spotify-btn" onclick="saveAudioToEngine()">Зберегти у медіатеку</button>
+        </div>
+    </div>
+
+    <div id="screen-settings" class="app-screen">
+        <div class="main-header">
+            <div class="header-title">Налаштування</div>
+        </div>
+        <div class="spotify-panel" style="border-color: var(--spotify-error); text-align: left;">
+            <div class="panel-title" style="color: var(--spotify-error);">Очистити пам'ять</div>
+            <p style="font-size: 13px; color: var(--spotify-text-muted); line-height: 1.5; margin-bottom: 20px;">
+                Якщо треки перестали додаватися або виникає помилка, це означає, що внутрішня пам'ять браузера Safari заповнена. Натисніть кнопку нижче, щоб повністю скинути базу даних.
+            </p>
+            <button class="spotify-btn" style="background-color: var(--spotify-error); color: white;" onclick="wipeDatabaseEngine()">Стерти всі дані</button>
         </div>
     </div>
 
     <div class="bottom-playback-bar" id="mini-player">
-        <div class="mini-track-clickable" onclick="toggleFullscreen(true)">
+        <div class="mini-track-clickable" onclick="toggleFullscreenView(true)">
             <img src="" class="mini-track-art" id="mini-art">
             <div class="mini-track-details">
                 <div class="mini-track-title" id="mini-title">Назва</div>
-                <div class="mini-track-artist" id="mini-artist">Артист</div>
+                <div class="mini-track-artist" id="mini-artist">Виконавець</div>
             </div>
         </div>
-        <button style="background:none; border:none; color:white; font-size:22px; padding:10px;" id="mini-play-btn" onclick="togglePlayPause()">▶</button>
-        <div class="progress-indicator-bar"><div class="progress-indicator-fill" id="mini-progress"></div></div>
+        <button class="mini-play-control-btn" id="mini-play-btn" onclick="triggerPlayPause()">▶</button>
+        <div class="progress-indicator-bar">
+            <div class="progress-indicator-fill" id="mini-progress"></div>
+        </div>
     </div>
 
     <div class="fullscreen-player-overlay" id="fullscreen-player">
         <div class="fs-player-header">
-            <span style="font-size: 24px; cursor: pointer;" onclick="toggleFullscreen(false)">▼</span>
-            <span style="font-size: 12px; font-weight:700; text-transform:uppercase;">Зараз грає</span>
-            <span>⋮</span>
+            <span style="font-size: 24px; cursor: pointer; padding: 4px;" onclick="toggleFullscreenView(false)">▼</span>
+            <span style="font-size: 11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Зараз грає</span>
+            <span style="font-size: 20px; color:transparent;">⋮</span>
         </div>
         <div class="fs-big-cover-art" id="fs-art"></div>
         <div class="fs-track-meta">
@@ -301,216 +349,257 @@
             <div class="fs-track-artist" id="fs-artist">Виконавець</div>
         </div>
         <div>
-            <input type="range" class="fs-slider-input" id="fs-slider" min="0" value="0" oninput="seekAudio(this)">
+            <input type="range" class="fs-slider-input" id="fs-slider" min="0" value="0" oninput="userSeekingAudio(this)">
             <div class="fs-time-stamps">
                 <span id="time-current">0:00</span>
                 <span id="time-duration">0:00</span>
             </div>
         </div>
         <div class="fs-controls-panel">
-            <button style="background:none; border:none; color:white; font-size:24px;" onclick="playPrev()">⏮</button>
-            <button class="fs-center-play-btn" id="fs-play-btn" onclick="togglePlayPause()">▶</button>
-            <button style="background:none; border:none; color:white; font-size:24px;" onclick="playNext()">⏭</button>
+            <button class="fs-nav-arrow" onclick="switchPrevTrack()">⏮</button>
+            <button class="fs-center-play-btn" id="fs-play-btn" onclick="triggerPlayPause()">▶</button>
+            <button class="fs-nav-arrow" onclick="switchNextTrack()">⏭</button>
         </div>
     </div>
 
     <div class="bottom-nav-navigation">
-        <div class="nav-tab-item tab-selected" id="n-lib" onclick="switchScreen('screen-library')"><span>🏠</span><div>Головна</div></div>
-        <div class="nav-tab-item" id="n-add" onclick="switchScreen('screen-add')"><span>＋</span><div>Додати</div></div>
+        <div class="nav-tab-item tab-selected" id="tab-home" onclick="switchScreen('screen-library')">
+            <span class="nav-icon">🏠</span><div>Головна</div>
+        </div>
+        <div class="nav-tab-item" id="tab-add" onclick="switchScreen('screen-add')">
+            <span class="nav-icon">＋</span><div>Додати</div>
+        </div>
     </div>
 
     <script>
-        let db = null;
-        let tracksList = [];
-        let currentIdx = -1;
-        const player = document.getElementById('audio-player');
+        let dbInstance = null;
+        let internalTracksArray = [];
+        let globalPlaybackIndex = -1;
+        let activeBlobUrl = null;
 
-        // Відкриваємо Базу Даних IndexedDB
-        const request = indexedDB.open("SafariMusicFixDatabase", 3);
-        request.onupgradeneeded = (e) => {
-            let database = e.target.result;
-            if(!database.objectStoreNames.contains("songs")) {
-                database.createObjectStore("songs", { keyPath: "id", autoIncrement: true });
+        const nativeAudioPlayer = document.getElementById('audio-player');
+
+        // Ініціалізація Сховища IndexedDB (Чисті Blob-файли)
+        const dbConnect = indexedDB.open("SpotifyPureBlobEngineDB", 1);
+        dbConnect.onupgradeneeded = (e) => {
+            let coreDb = e.target.result;
+            if(!coreDb.objectStoreNames.contains("library")) {
+                coreDb.createObjectStore("library", { keyPath: "id", autoIncrement: true });
             }
         };
-        request.onsuccess = (e) => {
-            db = e.target.result;
-            loadTracks();
+        dbConnect.onsuccess = (e) => {
+            dbInstance = e.target.result;
+            reloadTracksFromStorage();
         };
 
         function switchScreen(id) {
             document.querySelectorAll('.app-screen').forEach(s => s.style.display = 'none');
             document.querySelectorAll('.nav-tab-item').forEach(n => n.classList.remove('tab-selected'));
+            
             document.getElementById(id).style.display = 'flex';
-            if(id === 'screen-library') document.getElementById('n-lib').classList.add('tab-selected');
-            if(id === 'screen-add') document.getElementById('n-add').classList.add('tab-selected');
+            if(id === 'screen-library') document.getElementById('tab-home').classList.add('tab-selected');
+            if(id === 'screen-add') document.getElementById('tab-add').classList.add('tab-selected');
         }
 
-        function handleFileCheck(input) {
+        function updateFileLabel(input) {
             const file = input.files[0];
-            if(!file) return;
-            document.getElementById('file-status').innerText = `Обрано: ${file.name}`;
+            if(file) document.getElementById('file-status').innerText = `Обрано: ${file.name}`;
         }
 
-        // ЗБЕРЕЖЕННЯ ТРЕКУ ЧЕРЕЗ FILEREADER (ДЛЯ ОБХОДУ БЛОКУВАННЯ SAFARI)
-        function saveTrackToDB() {
+        // ЗБЕРЕЖЕННЯ БЕЗПОСЕРЕДНЬО ЯК BLOB (БЕЗ КОНВЕРТАЦІЇ В ТЕКСТ)
+        function saveAudioToEngine() {
             const fileInput = document.getElementById('form-file');
             const titleInput = document.getElementById('form-title');
             const artistInput = document.getElementById('form-artist');
             const coverInput = document.getElementById('form-cover');
 
             if(!fileInput.files[0] || !titleInput.value.trim()) {
-                alert("Оберіть файл та введіть назву пісні!");
+                alert("Помилка: Обов'язково оберіть файл та введіть назву пісні!");
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const songData = {
-                    title: titleInput.value.trim(),
-                    artist: artistInput.value.trim() || "Невідомий виконавець",
-                    cover: coverInput.value.trim() || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500",
-                    audioDataUrl: event.target.result // Звук у форматі тексту безпечний для iOS
-                };
-
-                const tx = db.transaction(["songs"], "readwrite");
-                tx.objectStore("songs").add(songData);
-                tx.oncomplete = () => {
-                    titleInput.value = ''; artistInput.value = ''; coverInput.value = ''; fileInput.value = '';
-                    document.getElementById('file-status').innerText = "Оберіть аудіозапис";
-                    loadTracks();
-                    switchScreen('screen-library');
-                };
+            const rawFile = fileInput.files[0];
+            const songObject = {
+                title: titleInput.value.trim(),
+                artist: artistInput.value.trim() || "Невідомий виконавець",
+                cover: coverInput.value.trim() || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500",
+                audioBlob: rawFile // Зберігаємо як чистий бінарний файл
             };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
 
-        function loadTracks() {
-            const tx = db.transaction(["songs"], "readonly");
-            tx.objectStore("songs").getAll().onsuccess = (e) => {
-                tracksList = e.target.result;
-                renderTracks();
+            const tx = dbInstance.transaction(["library"], "readwrite");
+            tx.objectStore("library").add(songObject);
+            tx.oncomplete = () => {
+                titleInput.value = ''; artistInput.value = ''; coverInput.value = ''; fileInput.value = '';
+                document.getElementById('file-status').innerText = "Натисніть для вибору .MP3 / .M4A";
+                reloadTracksFromStorage();
+                switchScreen('screen-library');
+            };
+            tx.onerror = () => {
+                alert("Сталася помилка запису. Спробуйте очистити пам'ять у Налаштуваннях додатка.");
             };
         }
 
-        function renderTracks() {
+        function reloadTracksFromStorage() {
+            const tx = dbInstance.transaction(["library"], "readonly");
+            tx.objectStore("library").getAll().onsuccess = (e) => {
+                internalTracksArray = e.target.result;
+                buildLibraryDOM();
+            };
+        }
+
+        function buildLibraryDOM() {
             const container = document.getElementById('tracks-container');
             container.innerHTML = '';
 
-            if(tracksList.length === 0) {
-                container.innerHTML = '<p style="color:gray; font-size:14px; margin-top:20px;">Плейліст порожній. Натисніть ＋ зверху, щоб завантажити музику.</p>';
+            if(internalTracksArray.length === 0) {
+                container.innerHTML = '<p style="color:var(--spotify-text-muted); font-size:14px; margin-top:30px; text-align:center;">Твоя медіатека порожня.<br>Натисни ＋, щоб завантажити перші треки.</p>';
                 return;
             }
 
-            tracksList.forEach((track, index) => {
+            internalTracksArray.forEach((track, index) => {
+                const isActive = (globalPlaybackIndex === index);
                 const row = document.createElement('div');
                 row.className = 'media-row';
-                row.onclick = () => startPlayback(index); // Прямий тап викликає звук
+                row.onclick = () => launchTrackPlayback(index);
                 row.innerHTML = `
                     <div class="media-main-info">
                         <img src="${track.cover}" class="media-art">
                         <div class="media-text-block">
-                            <div class="media-title-text" id="t-text-${index}">${track.title}</div>
+                            <div class="media-title-text ${isActive ? 'playing-active' : ''}" id="dom-title-${index}">${track.title}</div>
                             <div class="media-desc-text">${track.artist}</div>
                         </div>
                     </div>
-                    <div style="color:gray; padding:10px;" onclick="deleteTrack(${track.id}, event)">×</div>
+                    <div class="delete-btn" onclick="removeTrackFromStorage(${track.id}, event)">×</div>
                 `;
                 container.appendChild(row);
             });
         }
 
-        // ЗАПУСК ВІДТВОРЕННЯ (МИТТЄВИЙ ТАП)
-        function startPlayback(index) {
-            if(index < 0 || index >= tracksList.length) return;
-            currentIdx = index;
-            const track = tracksList[currentIdx];
+        // КРИТИЧНИЙ ФІКС ДЛЯ IOS SAFARI — ГЕНЕРАЦІЯ ТА АКТИВАЦІЯ НАПРЯМУ ПРИ ТАПІ
+        function launchTrackPlayback(index) {
+            if(index < 0 || index >= internalTracksArray.length) return;
+            globalPlaybackIndex = index;
+            const targetTrack = internalTracksArray[globalPlaybackIndex];
 
-            // Розігрів аудіосистеми iPhone
-            player.src = track.audioDataUrl;
-            player.load();
+            // Очищаємо попереднє посилання для уникнення витоку пам'яті
+            if(activeBlobUrl) {
+                URL.revokeObjectURL(activeBlobUrl);
+            }
 
-            // Оновлюємо UI тексти
-            document.getElementById('mini-title').innerText = track.title;
-            document.getElementById('mini-artist').innerText = track.artist;
-            document.getElementById('mini-art').src = track.cover;
+            // Миттєво створюємо Blob-посилання в контексті кліку користувача
+            activeBlobUrl = URL.createObjectURL(targetTrack.audioBlob);
+            nativeAudioPlayer.src = activeBlobUrl;
+            nativeAudioPlayer.load();
 
-            document.getElementById('fs-title').innerText = track.title;
-            document.getElementById('fs-artist').innerText = track.artist;
-            document.getElementById('fs-art').style.backgroundImage = `url('${track.cover}')`;
+            // Оновлення текстових блоків інтерфейсу
+            document.getElementById('mini-title').innerText = targetTrack.title;
+            document.getElementById('mini-artist').innerText = targetTrack.artist;
+            document.getElementById('mini-art').src = targetTrack.cover;
 
-            // Підсвічуємо зелений колір у списку
-            document.querySelectorAll('.media-title-text').forEach(t => t.classList.remove('playing-active'));
-            const currentTitleText = document.getElementById(`t-text-${index}`);
-            if(currentTitleText) currentTitleText.classList.add('playing-active');
+            document.getElementById('fs-title').innerText = targetTrack.title;
+            document.getElementById('fs-artist').innerText = targetTrack.artist;
+            document.getElementById('fs-art').style.backgroundImage = `url('${targetTrack.cover}')`;
+
+            // Фарбуємо активний трек у зелений колір
+            document.querySelectorAll('.media-title-text').forEach(el => el.classList.remove('playing-active'));
+            const currentText = document.getElementById(`dom-title-${index}`);
+            if(currentText) currentText.classList.add('playing-active');
 
             document.getElementById('mini-player').style.display = 'flex';
 
-            player.play().then(() => {
+            // Безпосередній запуск потоку звуку
+            nativeAudioPlayer.play().then(() => {
                 document.getElementById('mini-play-btn').innerText = "⏸";
                 document.getElementById('fs-play-btn').innerText = "⏸";
             }).catch(err => {
-                alert("Помилка активації звуку в iOS Safari. Натисніть кнопку Play ще раз.");
+                console.error("Safari Audio Lock:", err);
+                alert("iOS заблокував автоматичний запуск. Натисніть кнопку ▶ на плеєрі ще раз.");
             });
         }
 
-        function togglePlayPause() {
-            if(player.paused) {
-                player.play();
+        function triggerPlayPause() {
+            if(nativeAudioPlayer.src === "" && internalTracksArray.length > 0) {
+                launchTrackPlayback(0);
+                return;
+            }
+            if(nativeAudioPlayer.paused) {
+                nativeAudioPlayer.play();
                 document.getElementById('mini-play-btn').innerText = "⏸";
                 document.getElementById('fs-play-btn').innerText = "⏸";
             } else {
-                player.pause();
+                nativeAudioPlayer.pause();
                 document.getElementById('mini-play-btn').innerText = "▶";
                 document.getElementById('fs-play-btn').innerText = "▶";
             }
         }
 
-        player.ontimeupdate = () => {
-            if(!player.duration) return;
-            const progress = (player.currentTime / player.duration) * 100;
-            document.getElementById('mini-progress').style.width = `${progress}%`;
+        nativeAudioPlayer.ontimeupdate = () => {
+            if(!nativeAudioPlayer.duration) return;
+            const percent = (nativeAudioPlayer.currentTime / nativeAudioPlayer.duration) * 100;
+            document.getElementById('mini-progress').style.width = `${percent}%`;
 
             const slider = document.getElementById('fs-slider');
-            slider.max = Math.floor(player.duration);
-            slider.value = Math.floor(player.currentTime);
+            slider.max = Math.floor(nativeAudioPlayer.duration);
+            slider.value = Math.floor(nativeAudioPlayer.currentTime);
 
-            document.getElementById('time-current').innerText = formatTime(player.currentTime);
-            document.getElementById('time-duration').innerText = formatTime(player.duration);
+            document.getElementById('time-current').innerText = parseSecondsToTimer(nativeAudioPlayer.currentTime);
+            document.getElementById('time-duration').innerText = parseSecondsToTimer(nativeAudioPlayer.duration);
         };
 
-        player.onended = () => {
-            playNext();
+        nativeAudioPlayer.onended = () => {
+            switchNextTrack();
         };
 
-        function playNext() {
-            if(currentIdx + 1 < tracksList.length) startPlayback(currentIdx + 1);
+        function switchNextTrack() {
+            if(globalPlaybackIndex + 1 < internalTracksArray.length) {
+                launchTrackPlayback(globalPlaybackIndex + 1);
+            } else {
+                launchTrackPlayback(0); // Цикл у початок плейлісту
+            }
         }
 
-        function playPrev() {
-            if(currentIdx - 1 >= 0) startPlayback(currentIdx - 1);
+        function switchPrevTrack() {
+            if(globalPlaybackIndex - 1 >= 0) {
+                launchTrackPlayback(globalPlaybackIndex - 1);
+            }
         }
 
-        function seekAudio(slider) {
-            player.currentTime = slider.value;
+        function userSeekingAudio(slider) {
+            nativeAudioPlayer.currentTime = slider.value;
         }
 
-        function formatTime(secs) {
-            const m = Math.floor(secs / 60);
-            const s = Math.floor(secs % 60);
+        function parseSecondsToTimer(durationInSeconds) {
+            const m = Math.floor(durationInSeconds / 60);
+            const s = Math.floor(durationInSeconds % 60);
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        function toggleFullscreen(open) {
-            document.getElementById('fullscreen-player').classList.toggle('overlay-open', open);
+        function toggleFullscreenView(isOpen) {
+            document.getElementById('fullscreen-player').classList.toggle('overlay-open', isOpen);
         }
 
-        function deleteTrack(id, event) {
+        function removeTrackFromStorage(id, event) {
             event.stopPropagation();
-            if(!confirm("Видалити трек?")) return;
-            const tx = db.transaction(["songs"], "readwrite");
-            tx.objectStore("songs").delete(id);
-            tx.oncomplete = () => loadTracks();
+            if(!confirm("Видалити цей трек з пам'яті телефону?")) return;
+            
+            const tx = dbInstance.transaction(["library"], "readwrite");
+            tx.objectStore("library").delete(id);
+            tx.oncomplete = () => {
+                // Якщо видалили трек, який зараз грає — зупиняємо плеєр
+                if(internalTracksArray[globalPlaybackIndex] && internalTracksArray[globalPlaybackIndex].id === id) {
+                    nativeAudioPlayer.pause();
+                    document.getElementById('mini-player').style.display = 'none';
+                    globalPlaybackIndex = -1;
+                }
+                reloadTracksFromStorage();
+            };
+        }
+
+        function wipeDatabaseEngine() {
+            if(!confirm("Увага! Це безповоротно видалить всі додані треки та очистить кеш Safari. Продовжуємо?")) return;
+            indexedDB.deleteDatabase("SpotifyPureBlobEngineDB");
+            alert("Пам'ять успішно очищено. Додаток буде перезавантажено.");
+            window.location.reload();
         }
     </script>
 </body>
