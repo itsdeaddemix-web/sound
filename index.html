@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DemixSound</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="player-card">
+        <div class="cover-art" id="cover" style="background-image: url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500')"></div>
+        <h2 id="title">Ласкаво просимо</h2>
+        <p id="artist">Додайте музику</p>
+
+        <audio id="audio-player"></audio>
+        <audio id="audio-player-next" style="display:none;"></audio>
+
+        <div class="controls">
+            <button id="play-btn" onclick="togglePlay()">ГРАТИ</button>
+        </div>
+
+        <div class="stats">
+            Прослухано: <span id="listen-count">0</span> разів
+        </div>
+    </div>
+
+    <div class="add-form">
+        <h3>Додати нову пісню</h3>
+        <input type="file" id="file-input" accept="audio/*">
+        <input type="text" id="track-title" placeholder="Назва пісні">
+        <input type="text" id="track-artist" placeholder="Виконавець">
+        <input type="text" id="track-cover" placeholder="URL обкладинки (посилання на картинку)">
+        <button class="btn-submit" onclick="saveTrack()">Зберегти в плеєр</button>
+    </div>
+
+    <div class="playlist">
+        <div class="playlist-header">
+            <h3>Ваша медіатека</h3>
+            <button class="btn-settings" onclick="toggleSettings()">⚙️</button>
+        </div>
+        <div id="playlist-container"></div>
+    </div>
+
+    <div class="settings-container" id="settings-container">
+        <div class="settings-header">
+            <h3>Налаштування</h3>
+            <button class="btn-close-settings" onclick="toggleSettings()">×</button>
+        </div>
+
+        <div class="settings-item">
+            <label for="crossfade-switch">Плавний перехід (Crossfade)</label>
+            <label class="switch">
+                <input type="checkbox" id="crossfade-switch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="settings-item">
+            <label for="cover-zoom-switch">Анімація обкладинки</label>
+            <label class="switch">
+                <input type="checkbox" id="cover-zoom-switch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
